@@ -1,3 +1,5 @@
+const redux = require('redux')
+const createStore = redux.createStore
 const CACKE_ORDERED = "CACKE_ORDERED"
 
 //action creator is function that creates actions
@@ -15,7 +17,7 @@ const initialState = {
 }
 //(previousState, action ) => newState
 const reducer =  (state = initialState, action) =>{
-    switch(action.type){
+    switch(action.type){ 
         case CACKE_ORDERED:
             return {
                 //usualy we deal with objects with multiple property so in case we separate the object and only 
@@ -27,3 +29,13 @@ const reducer =  (state = initialState, action) =>{
             return state
     }
 }
+
+const store = createStore(reducer)
+    console.log('initial', store.getState())
+
+const unsubscribe = store.subscribe(()=> console.log('update state ', store.getState()))
+store.dispatch(orderCacke())
+store.dispatch(orderCacke())
+store.dispatch(orderCacke())
+
+unsubscribe()
