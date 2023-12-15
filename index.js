@@ -1,10 +1,16 @@
+//import redux and create objects from classes
 const redux = require('redux')
 const createStore = redux.createStore
+const bindActionCreators = redux.bindActionCreators
+const combineReducer = redux.combineReducers
 
+//create actions
 const CACKE_ORDERED = "CACKE_ORDERED"
 const RESTOR_CACKE = "RESTOR_CACKE"
+const ICE_CREAME = "ICE_CREAME"
+const ICE_CREAME_RESTOK = "ICE_CREAME_RESTOK"
 
-//action creator is function that creates actions
+//create the action creator functions that creates actions
 function orderCacke(){
 return {
     type: CACKE_ORDERED,
@@ -18,18 +24,53 @@ function restoreCacke(qty = 1){
        payload : qty
     }
 }
-const initialState = {
 
-    numOfCackes : 10,
-    another : 0
+function iceCream(qty = 1){
+    return{
+        type:ICE_CREAME,
+        payload: qty
+    }
 }
-//(previousState, action ) => newState
-const reducer =  (state = initialState, action) =>{
+
+function resotreIce(qty = 1){
+    return{
+        type:ICE_CREAME_RESTOK,
+        payload: qty
+    }
+}
+
+//intial states
+const initialCacke = {
+
+    numOfCackes : 10
+}
+
+const initialIce = {
+    numOfIce : 20
+}
+
+// creating reducer (previousState, action ) => newState
+const iceReducer =  (state = initialIce, action) =>{
+    switch(action.type){ 
+        case ICE_CREAME:
+            return{
+                ...state,
+                numOfIce :state.numOfIce - 1,
+            }
+        case ICE_CREAME_RESTOK:
+            return{
+                ...state,
+                numOfIce :state.numOfIce + action.payload,
+            }
+        default:
+            return state
+    }
+}
+
+const cackeReducer =  (state = initialCacke, action) =>{
     switch(action.type){ 
         case CACKE_ORDERED:
             return {
-                //usualy we deal with objects with multiple property so in case we separate the object and only 
-                //update the property that we want to update
                 ...state,
                 numOfCackes: state.numOfCackes - 1
             }
@@ -43,13 +84,33 @@ const reducer =  (state = initialState, action) =>{
     }
 }
 
-const store = createStore(reducer)
-    console.log('initial', store.getState())
+//creating the store with the initial states, normaly the store only accept one reducer but we can use
+//a function to combine multiple reducers
 
-const unsubscribe = store.subscribe(()=> console.log('update state ', store.getState()))
-store.dispatch(orderCacke())
-store.dispatch(orderCacke())
-store.dispatch(orderCacke())
+const rootReducer = combineReducer({
+    cake: cackeReducer,
+    ice: iceReducer
+})
 
-store.dispatch(restoreCacke(4))
+const store = createStore(rootReducer)
+console.log('initial', store.getState())
+
+//each time the store subscribe it returns the state
+const unsubscribe = store.subscribe(()=> console.log('update state ', store.getState()) )
+//dispatching the functions
+// store.dispatch(orderCacke())
+// store.dispatch(orderCacke())
+// store.dispatch(orderCacke())
+// store.dispatch(restoreCacke(4))
+
+//create a binding between actions functions and the dispatch
+const actions = bindActionCreators({orderCacke, restoreCacke, iceCream, resotreIce}, store.dispatch)
+actions.orderCacke()
+actions.orderCacke()
+actions.orderCacke()
+actions.restoreCacke(5)
+actions.iceCream()
+actions.iceCream()
+actions.resotreIce(5)
+
 unsubscribe()
