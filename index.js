@@ -1,15 +1,23 @@
 const redux = require('redux')
 const createStore = redux.createStore
+
 const CACKE_ORDERED = "CACKE_ORDERED"
+const RESTOR_CACKE = "RESTOR_CACKE"
 
 //action creator is function that creates actions
 function orderCacke(){
 return {
     type: CACKE_ORDERED,
-    quantity: 1 
+    payload: 1 
 }
 }
 
+function restoreCacke(qty = 1){
+    return{
+       type:RESTOR_CACKE,
+       payload : qty
+    }
+}
 const initialState = {
 
     numOfCackes : 10,
@@ -25,6 +33,11 @@ const reducer =  (state = initialState, action) =>{
                 ...state,
                 numOfCackes: state.numOfCackes - 1
             }
+        case RESTOR_CACKE:
+            return{
+                ...state,
+                numOfCackes :state.numOfCackes + action.payload,
+            }
         default:
             return state
     }
@@ -38,4 +51,5 @@ store.dispatch(orderCacke())
 store.dispatch(orderCacke())
 store.dispatch(orderCacke())
 
+store.dispatch(restoreCacke(4))
 unsubscribe()
