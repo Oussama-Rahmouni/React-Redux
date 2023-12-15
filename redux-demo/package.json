@@ -17,6 +17,10 @@
   },
   "homepage": "https://github.com/Oussama-Rahmouni/React-Redux#readme",
   "dependencies": {
-    "redux": "^5.0.0"
+    "axios": "^1.6.2",
+    "immer": "^10.0.3",
+    "redux": "^5.0.0",
+    "redux-logger": "^3.0.6",
+    "redux-thunk": "^3.1.0"
   }
 }

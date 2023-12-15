@@ -3,6 +3,10 @@ const redux = require('redux')
 const createStore = redux.createStore
 const bindActionCreators = redux.bindActionCreators
 const combineReducer = redux.combineReducers
+const applyMiddleware = redux.applyMiddleware
+
+const reduxLogger = require('redux-logger')
+const logger = reduxLogger.createLogger()
 
 //create actions
 const CACKE_ORDERED = "CACKE_ORDERED"
@@ -92,11 +96,9 @@ const rootReducer = combineReducer({
     ice: iceReducer
 })
 
-const store = createStore(rootReducer)
-console.log('initial', store.getState())
-
+const store = createStore(rootReducer, applyMiddleware(logger))
 //each time the store subscribe it returns the state
-const unsubscribe = store.subscribe(()=> console.log('update state ', store.getState()) )
+const unsubscribe = store.subscribe(()=> {} )
 //dispatching the functions
 // store.dispatch(orderCacke())
 // store.dispatch(orderCacke())
